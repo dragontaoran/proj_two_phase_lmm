@@ -1,0 +1,76 @@
+
+R version 3.4.3 (2017-11-30) -- "Kite-Eating Tree"
+Copyright (C) 2017 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> NJOB = 10
+> r_set = c(0, 1, 2, 3)
+> nsieve_set = c(20)
+> goal_set = c("intercept", "slope", "both")
+> design_set = c("ods", "blup")
+> 
+> dir.create("results", showWarnings=FALSE)
+> 
+> for (design in design_set) {
++     for (goal in goal_set) {
++         for (r in r_set) {
++ 			for (nsieve in nsieve_set) {
++             	load(paste0("res/", design, "_", goal, "_r", r, "_nsieve", nsieve, "/1.RData"))
++             	res_est = results_est
++             	res_se = results_se
++             	res_vc = results_vc
++             	for (i in 2:NJOB) {
++             	    load(paste0("res/", design, "_", goal, "_r", r, "_nsieve", nsieve, "/", i, ".RData"))
++             	    res_est = rbind(res_est, results_est)
++             	    res_se = rbind(res_se, results_se)
++             	    res_vc = rbind(res_vc, results_vc)
++             	}
++             	print(c(dim(res_est), dim(res_se), dim(res_vc)))
++             	fn.out = paste0("results/", design, "_", goal, "_r", r, "_nsieve", nsieve, ".RData")
++             	save(list=c("res_est", "res_se", "res_vc"), file=fn.out)
++ 			}
++         }    
++     }   
++ }
+[1] 10000     6 10000     6 10000     4
+[1] 10000     6 10000     6 10000     4
+[1] 10000     6 10000     6 10000     4
+[1] 10000     6 10000     6 10000     4
+[1] 10000     6 10000     6 10000     4
+[1] 10000     6 10000     6 10000     4
+[1] 10000     6 10000     6 10000     4
+[1] 10000     6 10000     6 10000     4
+[1] 10000     6 10000     6 10000     4
+[1] 10000     6 10000     6 10000     4
+[1] 10000     6 10000     6 10000     4
+[1] 10000     6 10000     6 10000     4
+[1] 10000     6 10000     6 10000     4
+[1] 10000     6 10000     6 10000     4
+[1] 10000     6 10000     6 10000     4
+[1] 10000     6 10000     6 10000     4
+[1] 10000     6 10000     6 10000     4
+[1] 10000     6 10000     6 10000     4
+[1] 10000     6 10000     6 10000     4
+[1] 10000     6 10000     6 10000     4
+[1] 10000     6 10000     6 10000     4
+[1] 10000     6 10000     6 10000     4
+[1] 10000     6 10000     6 10000     4
+[1] 10000     6 10000     6 10000     4
+> 
+> proc.time()
+   user  system elapsed 
+  2.044   0.148   2.997 
